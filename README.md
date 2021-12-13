@@ -1,0 +1,2 @@
+# libwss
+reusable c++ stff 
