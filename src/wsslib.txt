@@ -15,8 +15,11 @@ elseif(WSS_MAC64)
 	include(platform/CMakeLists.mac64)
 endif()
 
+message("conan include dirs: ${CONAN_INCLUDE_DIRS_SPDLOG}")
+
 include_directories(
 	${LIBWSSDIR}/src
+	${CONAN_INCLUDE_DIRS_SPDLOG}
 )
 
 set(LIBWSSSRC

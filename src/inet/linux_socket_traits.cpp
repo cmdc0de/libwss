@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/resource.h>
+#include "../wsinit.h"
 
 using namespace wss;
 
@@ -19,10 +20,10 @@ ErrorType BaseSocketInterface::initialize() {
 		inited = true;
 		rlimit lim;
 		if(getrlimit(RLIMIT_NOFILE,&lim)<0) {
-			WSSDEBUGMSG("Can't get rlimit for number of files");
+			WSInit::get().getLogger()->debug("Can't get rlimit for number of files");
 		} else {
-			WSSDEBUGMSG("Current user limit is: " << lim.rlim_cur);
-			WSSDEBUGMSG("Current system limit is: " << lim.rlim_max);
+			WSInit::get().getLogger()->debug("Current user limit is: {}", lim.rlim_cur);
+			WSInit::get().getLogger()->debug("Current system limit is: {}",  lim.rlim_max);
 		}
 	}
 	return ErrorType();
@@ -42,8 +43,8 @@ ErrorType BaseSocketInterface::nonBlock() {
 	return setBlocking(false), ErrorType();
 }
 
-int32 BaseSocketInterface::bytesToRead() {
-	uint32 val;
+int32_t BaseSocketInterface::bytesToRead() {
+	uint32_t val;
 	int retVal = ::ioctl(getSocket(),FIONREAD,&val);
 	if(retVal==SOCK_ERROR) {
 		setLastErrorCode();
@@ -71,7 +72,7 @@ void BaseSocketInterface::closeSocket() {
 TCPSocketInterface* TCPSocketInterface::createTCPSocket() {
 	SOCKET s = (SOCKET)::socket(PF_INET,SOCK_STREAM,0);
 	if(s==BAD_SOCKET) {
-		WSSINFOMSG("createTCPSocket() failed because: " << ErrorType::getOSErrorString(errno));
+		WSInit::get().getLogger()->error("createTCPSocket() failed because: {}", ErrorType::getOSErrorString(errno));
 		return 0;
 	}
 	return (new TCPSocketInterface(s));
@@ -98,7 +99,7 @@ TCPSocketInterface* TCPSocketInterface::createTCPSocket() {
 //	> 0 for the number of bytes actually received.
 //  You can still check for a graceful shutdown by getting a 0 back from receive
 //	then if getLastError().getErrorCode()==SNO_ERROR it is a graceful shutdown.
-int TCPSocketInterface::receive(char *pBuf, sint32 nSizeOfBuf) {
+int TCPSocketInterface::receive(char *pBuf, int32_t nSizeOfBuf) {
 	int ret = ::recv(getSocket(),pBuf,nSizeOfBuf-1,0);
 	if(ret==SOCK_ERROR) {
 		int nError = errno;
@@ -118,7 +119,7 @@ int TCPSocketInterface::receive(char *pBuf, sint32 nSizeOfBuf) {
 //return 0 for would block
 //return >0 for bytes sent which can be < then size
 //return -1 on error
-int TCPSocketInterface::send(const char *buf, uint32 size) {
+int TCPSocketInterface::send(const char *buf, uint32_t size) {
 	int retVal = ::send(getSocket(),buf,size,0);
 	if(retVal==SOCK_ERROR) {
 		int nError = errno;
@@ -212,7 +213,7 @@ ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort, st
 					int error;
 					socklen_t len = sizeof(error);
 					if(getsockopt(getSocket(),SOL_SOCKET,SO_ERROR,(char *)&error,&len) < 0) {
-						WSSERRMSG("There is a pending error on the socket.");
+						WSInit::get().getLogger()->error("There is a pending error on the socket.");
 						setLastErrorCode(SECONNREFUSED);
 					} else {
 						if(error==SNO_ERROR) {
@@ -224,7 +225,7 @@ ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort, st
 						}
 					}
 				} else {
-					WSSERRMSG("Select error:  Socket is not in any fd_set???????");
+					WSInit::get().getLogger()->error("Select error:  Socket is not in any fd_set???????");
 					setLastErrorCode(SENOTSOCK);
 					return getLastError();
 				}
