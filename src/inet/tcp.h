@@ -3,9 +3,9 @@
 #ifndef WSS_TCP_H
 #define WSS_TCP_H
 
-//#include "socket_interface.h"
 #include "socket_typedefs.h"
 #include "../error_type.h"
+#include <memory>
 
 namespace wss {
 
@@ -141,7 +141,7 @@ public:
 	*	returns SOCK_ERROR on error (call getLastError() to see what it was)
 	*	or the number of bytes that can be read.
 	*/
-	uint32 bytesToRead() {return getImpl()->bytesToRead();}
+	uint32_t bytesToRead() {return getImpl()->bytesToRead();}
 	/**
 	* @date  2/1/2004 5:01:40 PM
 	* @return  void 
@@ -164,12 +164,12 @@ public:
 	*/
 	bool ok() {return (mImpl.get()!=0);}
 protected:
-	BaseSocket(const std::tr1::shared_ptr<SocketType> &os) : mImpl(os) {}
+	BaseSocket(const std::shared_ptr<SocketType> &os) : mImpl(os) {}
 	BaseSocket(const BaseSocket &bs) : mImpl(bs.getImpl()) {}
-	const std::tr1::shared_ptr<SocketType> &getImpl() const {return mImpl;}
-	std::tr1::shared_ptr<SocketType> &getImpl() {return mImpl;}
+	const std::shared_ptr<SocketType> &getImpl() const {return mImpl;}
+	std::shared_ptr<SocketType> &getImpl() {return mImpl;}
 private:
-	std::tr1::shared_ptr<SocketType> mImpl;
+	std::shared_ptr<SocketType> mImpl;
 };
 
 /**
@@ -218,7 +218,7 @@ public:
 	*	this the data is actually transmitted I am closing the socket which seems
 	*	reasonable, if not let me know.  -Demetrius
 	*/
-	int send(const char *data, uint32 size) {
+	int send(const char *data, uint32_t size) {
 		return getImpl()->send(data,size);
 	}
 	/**
@@ -247,12 +247,12 @@ public:
 	*	}
 	*   This is done because Non blocking sockets for our world are much more popular
 	*/
-	int receive(char *data, uint32 size) {
+	int receive(char *data, uint32_t size) {
 		return getImpl()->receive(data,size);
 	}
 protected:
 	TCPServerSocket(TCPSocketInterface *os) 
-		: BaseSocket<TCPSocketInterface>(std::tr1::shared_ptr<TCPSocketInterface>(os)) {}
+		: BaseSocket<TCPSocketInterface>(std::shared_ptr<TCPSocketInterface>(os)) {}
 };
 
 /**
@@ -322,7 +322,7 @@ public:
 	*		will return SETIMEOUT) the socket will be closed.
 	*
 	*/
-	ErrorType connect(const InetAddressV4 &addr, short nPort, uint32 waitTimeMS);
+	ErrorType connect(const InetAddressV4 &addr, short nPort, uint32_t waitTimeMS);
 };
 
 /**
@@ -338,7 +338,7 @@ public:
 	*  
 	*  
 	*/
-	ListenerSocket(const std::tr1::shared_ptr<TCPSocketInterface> &impl) : BaseSocket<TCPSocketInterface>(impl) {
+	ListenerSocket(const std::shared_ptr<TCPSocketInterface> &impl) : BaseSocket<TCPSocketInterface>(impl) {
 	}
 	/**
 	* @date  1/13/2005 2:14:37 PM
@@ -409,7 +409,7 @@ public:
 	*/
 	static ListenerSocket create() {
 		TCPSocketInterface *tcp = TCPSocketInterface::createTCPSocket();
-		return ListenerSocket(std::tr1::shared_ptr<TCPSocketInterface>(tcp));
+		return ListenerSocket(std::shared_ptr<TCPSocketInterface>(tcp));
 	}
 	/**
 	* @date  1/13/2005 2:14:52 PM

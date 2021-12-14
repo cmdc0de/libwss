@@ -99,7 +99,7 @@ TCPSocketInterface* TCPSocketInterface::createTCPSocket() {
 //	> 0 for the number of bytes actually received.
 //  You can still check for a graceful shutdown by getting a 0 back from receive
 //	then if getLastError().getErrorCode()==SNO_ERROR it is a graceful shutdown.
-int TCPSocketInterface::receive(char *pBuf, int32_t nSizeOfBuf) {
+int TCPSocketInterface::receive(char *pBuf, uint32_t nSizeOfBuf) {
 	int ret = ::recv(getSocket(),pBuf,nSizeOfBuf-1,0);
 	if(ret==SOCK_ERROR) {
 		int nError = errno;

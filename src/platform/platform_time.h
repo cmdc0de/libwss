@@ -5,8 +5,8 @@
 #include <ctime>
 
 namespace wss { namespace platform {
-	errno_t gmtime(tm* _tm, const time_t* time);
-	errno_t localtime(tm* _tm, const time_t* time);
+	error_t gmtime(tm* _tm, const time_t* time);
+	error_t localtime(tm* _tm, const time_t* time);
 }
 }
 

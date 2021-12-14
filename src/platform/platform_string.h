@@ -4,11 +4,11 @@
 #include <cstdarg>
 
 namespace wss { namespace platform {
-	int32 vsnprintf(char * dest,int32 dest_string_size,const char * format,va_list args);
-	int32 vsnprintf(wchar_t * dest,int32 dest_string_size,const wchar_t * format,va_list args);
+	int vsnprintf(char * dest,int dest_string_size,const char * format,va_list args);
+	int vsnprintf(wchar_t * dest,int dest_string_size,const wchar_t * format,va_list args);
 
-	int32 snprintf(char *dest, int32 dest_string_size, const char * format, ...);
-	int32 snprintf(wchar_t *dest, int32 dest_string_size, const wchar_t * format, ...);
+	int snprintf(char *dest, int dest_string_size, const char * format, ...);
+	int snprintf(wchar_t *dest, int dest_string_size, const wchar_t * format, ...);
 }
 }
 

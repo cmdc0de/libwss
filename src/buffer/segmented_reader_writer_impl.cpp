@@ -80,7 +80,7 @@ bool SegmentedReaderWriterImpl::fixedCapacity() const {
 
 //Get raw pointer to data
 const void * SegmentedReaderWriterImpl::raw(size_t idx, size_t& out_length) const {
-	return Stream.raw(idx,(uint32 &)out_length);
+	return Stream.raw(idx,(uint32_t &)out_length);
 }
 
 

@@ -1,11 +1,8 @@
 
 #include <sstream>
 
-#ifdef  WSS_LINUX
-#include <cstring>
-#endif
-
 #include "error_type.h"
+#include <string.h>
 
 using namespace wss;
 
@@ -24,7 +21,7 @@ std::string ErrorType::getOSErrorString(int nError) {
 		lpSource, 1024, 0);
 	return lpSource;
 #else
-	return strerror(nError);
+	return ::strerror(nError);
 #endif
 }
 

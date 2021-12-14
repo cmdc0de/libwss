@@ -1,8 +1,8 @@
 #include <sstream>
 #include <time.h>
-#include "../utility/logger.h"
 #include "tcp.h"
 #include "channel.h"
+#include "../wsinit.h"
 
 using namespace wss;
 
@@ -41,7 +41,7 @@ void ComChannel::setDeath() {
 	mMarkedForDeath = true;
 }
 
-void ComChannel::removeFromBuffer(uint32 bytesToRemove) {
+void ComChannel::removeFromBuffer(uint32_t bytesToRemove) {
 	mIncomingBuffer.erase(0, bytesToRemove);
 }
 
@@ -55,7 +55,7 @@ void ComChannel::setLastReceiveTime(NativeTimeType now) {
 
 ComChannel::~ComChannel() {}
 
-void ComChannel::removeFromOutBuffer(uint32 bytesToRemove) {
+void ComChannel::removeFromOutBuffer(uint32_t bytesToRemove) {
 	mOutBuffer.erase(0, bytesToRemove);
 }
 
@@ -103,7 +103,7 @@ int TCPComChannel::onBufferIn() {
 		return total;
 	} else {
 		if(bytes==0 && !mSock->getLastError()) {
-			WSSERRMSG("Socket read error: " << mSock->getLastError().getOSErrorString().c_str());
+			GET_LOGGER->error("Socket read error: {}", mSock->getLastError().getOSErrorString().c_str());
 		}
 		return bytes;
 	}
@@ -127,7 +127,7 @@ int TCPComChannel::onSendData() {
 				//this one are still considered successful.
 				std::string strErr;
 				mSock->getLastError().getErrorString(strErr);
-				WSSERRMSG("Socket Send Error: " << strErr.c_str());
+				GET_LOGGER->error("Socket Send Error: {}", strErr.c_str());
 				break;
 			}
 			else
@@ -137,10 +137,10 @@ int TCPComChannel::onSendData() {
 		} 
 		//Keep sending data as long as we send the whole chunk
 		//Sending a partial chunk is not an error and the data will remain in the buffer for the next call.
-		while (raw_size == (uint32)sent && (uint32)total_sent < getOutBuffer().size());
+		while (raw_size == (uint32_t)sent && (uint32_t)total_sent < getOutBuffer().size());
 
 		//VALUE_METRIC2("Channel::socketOutBytes", total_sent);
-		WSSTRACEMSG_S("TCPComChannel - Sent %d/%d bytes", total_sent, getOutBuffer().size());
+		GET_LOGGER->trace("TCPComChannel - Sent {}/{} bytes", total_sent, getOutBuffer().size());
 
 		//Remove any data we sent
 		removeFromOutBuffer(total_sent);

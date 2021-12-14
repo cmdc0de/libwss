@@ -4,15 +4,15 @@ using namespace wss;
 
 WSInit *WSInit::MySelf = nullptr;
 
-static ErrorType WSInit::init(std::shared_ptr<spdlog::logger> &logger) {
+ErrorType WSInit::init(std::shared_ptr<spdlog::logger> &logger) {
 	if(MySelf) {
 		delete MySelf;
 	} 
 	MySelf = new WSInit(logger);
-	return ErrorType;
+	return ErrorType();
 }
 
-static WSInit &WSInit::get() {
+WSInit &WSInit::get() {
 	return *MySelf;
 }
 

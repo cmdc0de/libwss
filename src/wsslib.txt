@@ -1,5 +1,8 @@
 
 set(WSS_LINUX64 1)
+set(WSS_LINUX 1)
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DWSS_LINUX")
+
 
 if(WSS_LINUX64)
 	set(SRC
@@ -32,8 +35,5 @@ set(LIBWSSSRC
 	${LIBWSSDIR}/src/inet/inetaddress_v4.cpp
 	${LIBWSSDIR}/src/inet/tcp.cpp
 	${LIBWSSDIR}/src/inet/channel.cpp
-	${LIBWSSDIR}/src/observer/signal_base.cpp
-	${LIBWSSDIR}/src/observer/signal_list.cpp
-	${LIBWSSDIR}/src/observer/signal_map.cpp
 )
 

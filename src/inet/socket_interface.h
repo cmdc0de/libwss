@@ -364,7 +364,7 @@ namespace wss {
 		*	}
 		*   This is done because Non blocking sockets for our world are much more popular
 		*/
-		int receive(char *pBuf, int32_t nSizeOfBuf);
+		int receive(char *pBuf, uint32_t nSizeOfBuf);
 		/**
 		* @date  11/6/2003 1:10:24 PM
 		* @return  ErrorType 

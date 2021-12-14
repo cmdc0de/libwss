@@ -32,5 +32,8 @@ set(LIBWSSSRC
 	${LIBWSSDIR}/src/observer/signal_base.cpp
 	${LIBWSSDIR}/src/observer/signal_list.cpp
 	${LIBWSSDIR}/src/observer/signal_map.cpp
+	${LIBWSSDIR}/src/io/iotraits_linux.cpp
+	${LIBWSSDIR}/src/io/properties.cpp
+	${LIBWSSDIR}/src/io/readerwriter.cpp
 )
 

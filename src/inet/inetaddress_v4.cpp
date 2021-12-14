@@ -50,7 +50,7 @@ InetAddressV4::InetAddressV4(const struct in_addr &addr) {
 	::memcpy(&mIPaddr,&addr,sizeof(in_addr));
 };
 
-InetAddressV4::InetAddressV4(uint32 addr) {
+InetAddressV4::InetAddressV4(uint32_t addr) {
 	::memset(&mIPaddr, 0, sizeof(in_addr));
 	mIPaddr.s_addr = addr;
 }

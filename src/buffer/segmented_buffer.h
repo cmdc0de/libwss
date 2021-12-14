@@ -3,51 +3,49 @@
 
 #include <vector>
 #include <deque>
-#include <cassert>
 #include <algorithm>
-#include <iostream>
+#include "../portable_types.h"
 
 namespace wss {
 
-#define SET_NO_COPY(TypeName) TypeName(const TypeName&) = delete;void operator=(const TypeName&) = delete;
 
 class BlockBuffer {
 public:
 	//ctor to create this interface around a block of memory
-	BlockBuffer(uint8 *buf, uint32 size);
+	BlockBuffer(uint8_t *buf, uint32_t size);
 	//swaps internal pointers
 	void swap(BlockBuffer &bb);
 	//copy from this memory to an out going buffer
-	uint32 CopyTo(uint32 pos, uint8* toBuffer, uint32 sizeToCopy) const;
+	uint32_t CopyTo(uint32_t pos, uint8_t* toBuffer, uint32_t sizeToCopy) const;
 	//copy from external buffer to this memory
-	uint32 CopyFrom(uint32 pos, const uint8* fromBuffer, uint32 sizeToCopy);
+	uint32_t CopyFrom(uint32_t pos, const uint8_t* fromBuffer, uint32_t sizeToCopy);
 	//check to see if block is empty
 	bool isEmpty() const;
 	//move memory within this block
-	void MemMove(uint32 moveTo, uint32 moveFrom);
+	void MemMove(uint32_t moveTo, uint32_t moveFrom);
 	//erease memory from position 'from' to end
-	void erase(uint32 from);
+	void erase(uint32_t from);
 	//returns start pointer
-	const uint8* getStart() const;
+	const uint8_t* getStart() const;
 	//sets start pointer within buffer, this does not change the allocated start pointer
-	void setStart(uint32 pos);
+	void setStart(uint32_t pos);
 	//set end = deepestWrite
 	void syncCapacityWithBytesWritten();
 	//returns the capacity of this buffer
-	uint32 capacity() const;
+	uint32_t capacity() const;
 	//returns bytes written to this buffer
-	uint32 bytesWritten() const;
+	uint32_t bytesWritten() const;
 	//returns bytes free in this buffer (i.e. from deepestWrite to allocated end
-	uint32 bytesLeft() const;
+	uint32_t bytesLeft() const;
 	//allows you to 'fill' the buffer
 	void fill();
 	//frees block
 	~BlockBuffer();
 private:
-	uint8 *allocatedStart; //never moved used for delete []
-	uint8 *start; //moved if we erase from front of block
-	uint8 *deepestWrite; //moved as we write into block
-	uint8 *end; //moved if we erase from end or middle of block (moved towards start)
+	uint8_t *allocatedStart; //never moved used for delete []
+	uint8_t *start; //moved if we erase from front of block
+	uint8_t *deepestWrite; //moved as we write into block
+	uint8_t *end; //moved if we erase from end or middle of block (moved towards start)
 private:
 	SET_NO_COPY(BlockBuffer);
 };
@@ -55,14 +53,16 @@ private:
 template<unsigned int BLOCKSIZE>
 class BlockBufferAllocator {
 public:
-	static const uint32 BLOCK_SIZE = BLOCKSIZE;
+	static const uint32_t BLOCK_SIZE = BLOCKSIZE;
 	static BlockBuffer *allocate() {
-		return new BlockBuffer(new uint8[BLOCKSIZE],BLOCKSIZE);
+		return new BlockBuffer(new uint8_t[BLOCKSIZE],BLOCKSIZE);
 	}
 	static void deallocate(BlockBuffer *buffer) {
 		delete buffer;
 	}
-	BlockBufferAllocator() : NoCopy() {}
+	BlockBufferAllocator() {}
+private:
+	SET_NO_COPY(BlockBufferAllocator);
 };
 
 /*
@@ -91,9 +91,9 @@ template<typename BAllocator>
 class SegmentedBuffer {
 	typedef std::deque<BlockBuffer*> BufferListType;
 public:
-	typedef uint32 size_type;
-	typedef uint32 pos_type;
-	static const uint32 BLOCK_SIZE = BAllocator::BLOCK_SIZE;
+	typedef uint32_t size_type;
+	typedef uint32_t pos_type;
+	static const uint32_t BLOCK_SIZE = BAllocator::BLOCK_SIZE;
 private:
 	class Position {
 	public:
@@ -114,7 +114,7 @@ public:
 	SegmentedBuffer(const SegmentedBuffer &sb);
 	~SegmentedBuffer();
 
-	const void *raw(pos_type pos, uint32 &outSize) const ;
+	const void *raw(pos_type pos, uint32_t &outSize) const ;
 
 	size_type read(pos_type readPos, void *outBuff, size_type outBufferSize);
 
@@ -136,14 +136,14 @@ protected:
 	size_type EncodeSize() const;
 	void UpdateEncodeEnd();
 	size_type EncodeSize(bool forCapacity) const;
-	Position findBlockIndex(uint32 pos) const;
+	Position findBlockIndex(uint32_t pos) const;
 private:
 	BufferListType BufferList;
 private:
 	struct Encoded {
-		uint32 startIndex;
-		uint32 endIndex;
-		uint32 BytesWritten;
+		uint32_t startIndex;
+		uint32_t endIndex;
+		uint32_t BytesWritten;
 		Encoded() : startIndex(0), endIndex(0), BytesWritten(0) {}
 	};
 	typedef std::vector<Encoded> EncodeListType;

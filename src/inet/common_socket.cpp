@@ -1,5 +1,4 @@
 #include "socket_typedefs.h"
-#include "../utility/logger.h"
 
 #ifdef WSS_LINUX
 #include <netinet/tcp.h>
@@ -187,7 +186,7 @@ bool TCPSocketInterface::isInState(SOCKET_STATE s) const{
 }
 
 int TCPSocketInterface::send(const std::basic_string<char> &s) {
-	return send(s.c_str(),(uint32)s.length());
+	return send(s.c_str(),(uint32_t)s.length());
 }
 
 ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort) {
@@ -197,7 +196,7 @@ ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort) {
 	return connect(addr,nPort,&tv);
 }
 
-ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort, uint32 waitTimeMS) {
+ErrorType TCPSocketInterface::connect(const InetAddressV4 &addr, short nPort, uint32_t waitTimeMS) {
 	if(waitTimeMS==0) {
 		return connect(addr,nPort,(timeval *)0);
 	} else {

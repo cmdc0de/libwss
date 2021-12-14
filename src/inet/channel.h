@@ -3,9 +3,9 @@
 
 #pragma once
 
+#include "../portable_types.h"
 #include "../io/readerwriter.h"
 #include "../error_type.h"
-#include "../xtl/nocopy.h"
 
 namespace wss {
 	class TCPServerSocket;
@@ -19,7 +19,7 @@ namespace wss {
 *	Currently (2/2012) this class only via TCPV4
 *	Future should implement TCPV6, UDPV4 and UDPV6
 */
-class ComChannel : public NoCopy {
+class ComChannel  {
 public: //static
 	ComChannel();
 	/**
@@ -52,7 +52,7 @@ public: //static
 	*	Returns the size of the application input buffer.  
 	*	Low level we read from socket and place bytes into this buffer.
 	*/
-	uint32 getCommandBufferLength() {return uint32(mIncomingBuffer.size());}
+	uint32_t getCommandBufferLength() {return uint32_t(mIncomingBuffer.size());}
 	/*
 	*	returns the IPV4 peer address of socket
 	*/
@@ -68,15 +68,15 @@ public: //static
 	/*
 	*	Bytes to remove from the incoming buffer, most likely because you already processed them
 	*/
-	void removeFromBuffer(uint32 bytesToRemove);
+	void removeFromBuffer(uint32_t bytesToRemove);
 	/*
 	*	return the number of bytes sent through this comchannel, stat info
 	*/
-	uint64 getBytesSent() const {return mBytesSent;}
+	uint64_t getBytesSent() const {return mBytesSent;}
 	/*
 	*	return the number of bytes received through this comchannel, stat info
 	*/
-	uint64 getBytesReceived() const {return mBytesReceived;}
+	uint64_t getBytesReceived() const {return mBytesReceived;}
 	/*
 	*	returns true if there is data in the outgoing buffer
 	*/
@@ -96,7 +96,7 @@ protected:
 protected:
 	virtual int onBufferIn()=0;
 	virtual int onSendData()=0;
-	void removeFromOutBuffer(uint32 bytesToRemove);
+	void removeFromOutBuffer(uint32_t bytesToRemove);
 	const ReaderWriter &getOutBuffer() {return mOutBuffer;}
 	void clearMessageBuffer();
 protected:
@@ -104,10 +104,10 @@ protected:
 	NativeTimeType		mLastReceiveTime;
 	ReaderWriter		mOutBuffer;
 private:
-	uint64				mBytesSent;
-	uint64				mBytesReceived;
+	uint64_t				mBytesSent;
+	uint64_t				mBytesReceived;
 	NativeTimeType		mBirthDate;
-	uint64				mBytesBuffered;
+	uint64_t				mBytesBuffered;
 	bool					mMarkedForDeath;
 };
 

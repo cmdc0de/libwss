@@ -2,7 +2,7 @@
 #include <dlfcn.h>
 
 namespace wss { namespace platform {
-	errno_t fopen(FILE** f, const char * file_name, const char * mode) {
+	error_t fopen(FILE** f, const char * file_name, const char * mode) {
 		*f = ::fopen(file_name, mode);
 		return *f != 0;
 	}

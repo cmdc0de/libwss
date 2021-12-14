@@ -20,7 +20,7 @@ private:
 	static WSInit *MySelf;
 };
 
-#define WSSDEBUGMSG(a) WSInit::getInstance().getLogger()->debug(a);
+#define GET_LOGGER WSInit::get().getLogger()
 
 }
 

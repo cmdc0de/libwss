@@ -154,7 +154,7 @@ public:
 	/**
     *  get the class of the error to localize it to a module
     */
-   Facility getErrorFacility() const {return (Facility)(mnSClientError & 0xFF00);}
+   Facility getErrorFacility() const {return static_cast<Facility>(mnSClientError & 0xFF00);}
 
    bool isOsError() const {return (getErrorFacility()==FacilityOS);}
 
@@ -176,7 +176,7 @@ public:
    /**
     *  create a "everything is fine" error code
     */
-   static ErrorType noError() {return ErrorType((uint16_t)codeNone);}
+   static ErrorType noError() {return ErrorType(static_cast<uint16_t>(codeNone));}
 
 /**
 * @date  12/14/2004 1:30:14 PM

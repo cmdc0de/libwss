@@ -1,7 +1,6 @@
 #include "segmented_buffer.h"
 #include <cstring>
-#include "../utility/logger.h"
-#include "../xtl/nocopy.h"
+#include <cassert>
 
 using namespace wss;
 
@@ -18,16 +17,16 @@ namespace wss {
 
 }
 
-BlockBuffer::BlockBuffer(uint8 *buf, uint32 size) : allocatedStart(buf), start(buf), deepestWrite(start), end(buf+size) {
+BlockBuffer::BlockBuffer(uint8_t *buf, uint32_t size) : allocatedStart(buf), start(buf), deepestWrite(start), end(buf+size) {
 
 }
 
 void BlockBuffer::swap(BlockBuffer &bb) {
 	//tmp
-	uint8 *ostart = start;
-	uint8 *oend = end;
-	uint8 *dw = deepestWrite;
-	uint8 *aStart = allocatedStart;
+	uint8_t *ostart = start;
+	uint8_t *oend = end;
+	uint8_t *dw = deepestWrite;
+	uint8_t *aStart = allocatedStart;
 
 	//this
 	start = bb.start;
@@ -42,15 +41,15 @@ void BlockBuffer::swap(BlockBuffer &bb) {
 	bb.allocatedStart = aStart;
 }
 
-uint32 BlockBuffer::CopyTo(uint32 pos, uint8* toBuffer, uint32 sizeToCopy) const  {
-	uint32 toCopy = (bytesWritten()-pos) >= 0 ? (bytesWritten()-pos) : 0;
+uint32_t BlockBuffer::CopyTo(uint32_t pos, uint8_t* toBuffer, uint32_t sizeToCopy) const  {
+	uint32_t toCopy = (bytesWritten()-pos) >= 0 ? (bytesWritten()-pos) : 0;
 	toCopy = (std::min)(toCopy,sizeToCopy);
 	memcpy(toBuffer,&start[pos],toCopy);
 	return toCopy;
 }
 
-uint32 BlockBuffer::CopyFrom(uint32 pos, const uint8* fromBuffer, uint32 sizeToCopy) {
-	uint32 toCopy = (capacity()-pos) >= 0 ? (capacity()-pos) : 0;
+uint32_t BlockBuffer::CopyFrom(uint32_t pos, const uint8_t* fromBuffer, uint32_t sizeToCopy) {
+	uint32_t toCopy = (capacity()-pos) >= 0 ? (capacity()-pos) : 0;
 	toCopy = (std::min)(toCopy,sizeToCopy);
 	if(fromBuffer) {
 		memcpy(&start[pos],fromBuffer,toCopy);
@@ -74,7 +73,7 @@ bool BlockBuffer::isEmpty() const {
 *
 * History: 6/16/2011 6:15:02 PM - Demetrius_Comes
 *********************************************************************************************/
-void BlockBuffer::MemMove(uint32 moveTo, uint32 moveFrom) {
+void BlockBuffer::MemMove(uint32_t moveTo, uint32_t moveFrom) {
 	memmove(&start[moveTo],&start[moveFrom],deepestWrite-&start[moveFrom]);
 	deepestWrite = deepestWrite-(moveFrom-moveTo);
 }
@@ -84,7 +83,7 @@ void BlockBuffer::MemMove(uint32 moveTo, uint32 moveFrom) {
 *
 * History: 6/16/2011 6:15:31 PM - Demetrius_Comes
 *********************************************************************************************/
-void BlockBuffer::erase(uint32 from) {
+void BlockBuffer::erase(uint32_t from) {
 	deepestWrite = &start[from];
 }
 
@@ -93,7 +92,7 @@ void BlockBuffer::erase(uint32 from) {
 *
 * History: 6/16/2011 6:15:49 PM - Demetrius_Comes
 *********************************************************************************************/
-const uint8* BlockBuffer::getStart() const
+const uint8_t* BlockBuffer::getStart() const
 {
 	return start;
 }
@@ -112,7 +111,7 @@ void BlockBuffer::fill() {
 *
 * History: 6/16/2011 6:16:29 PM - Demetrius_Comes
 *********************************************************************************************/
-void BlockBuffer::setStart(uint32 pos) {
+void BlockBuffer::setStart(uint32_t pos) {
 	start = start+pos;
 	assert(end>=start);
 }
@@ -122,8 +121,8 @@ void BlockBuffer::setStart(uint32 pos) {
 *
 * History: 6/16/2011 6:16:56 PM - Demetrius_Comes
 *********************************************************************************************/
-uint32 BlockBuffer::capacity() const {
-	return static_cast<uint32>(end-start);
+uint32_t BlockBuffer::capacity() const {
+	return static_cast<uint32_t>(end-start);
 }
 
 /**********************************************************************************************
@@ -131,8 +130,8 @@ uint32 BlockBuffer::capacity() const {
 *
 * History: 6/16/2011 6:17:06 PM - Demetrius_Comes
 *********************************************************************************************/
-uint32 BlockBuffer::bytesWritten() const {
-	return static_cast<uint32>(deepestWrite-start);
+uint32_t BlockBuffer::bytesWritten() const {
+	return static_cast<uint32_t>(deepestWrite-start);
 }
 
 /**********************************************************************************************
@@ -140,8 +139,8 @@ uint32 BlockBuffer::bytesWritten() const {
 *
 * History: 6/16/2011 6:17:18 PM - Demetrius_Comes
 *********************************************************************************************/
-uint32 BlockBuffer::bytesLeft() const {
-	return static_cast<uint32>(end-deepestWrite);
+uint32_t BlockBuffer::bytesLeft() const {
+	return static_cast<uint32_t>(end-deepestWrite);
 }
 
 /**********************************************************************************************
@@ -174,8 +173,8 @@ typename SegmentedBuffer<BAllocator>::Position SegmentedBuffer<BAllocator>::Posi
 	} else {
 #ifdef VALIDATE_SEGMENTED_BUFFER
 		BufferListType::const_iterator it = buf->BufferList.begin();
-		uint32 totalCapacity = 0;
-		uint32 lastCapacity = 0;
+		uint32_t totalCapacity = 0;
+		uint32_t lastCapacity = 0;
 		size_type index = 0;
 		for(;it!=buf->BufferList.end();++it,++index) {
 			totalCapacity+= (lastCapacity=(*it)->capacity());
@@ -196,13 +195,13 @@ typename SegmentedBuffer<BAllocator>::Position SegmentedBuffer<BAllocator>::Posi
 template<typename BAllocator>
 typename SegmentedBuffer<BAllocator>::Position SegmentedBuffer<BAllocator>::getEnd() {
 	assert(BufferList.size());
-	return Position(uint32(BufferList.size()-1),BufferList[BufferList.size()-1]->bytesWritten(),this);
+	return Position(uint32_t(BufferList.size()-1),BufferList[BufferList.size()-1]->bytesWritten(),this);
 }
 
 template<typename BAllocator>
 typename SegmentedBuffer<BAllocator>::pos_type SegmentedBuffer<BAllocator>::Position::convertToLinearOffset() const {
-	uint32 pos = 0;
-	for(uint32 i=0;i<Index;i++) {
+	uint32_t pos = 0;
+	for(uint32_t i=0;i<Index;i++) {
 		pos += SBuffer->BufferList[i]->capacity();
 	}
 	return (pos+OffSet);
@@ -245,7 +244,7 @@ SegmentedBuffer<BAllocator>::SegmentedBuffer(const SegmentedBuffer<BAllocator> &
 		without leaving the allocated memory
 */
 template<typename BAllocator>
-const void *SegmentedBuffer<BAllocator>::raw(pos_type pos, uint32 &outSize) const {
+const void *SegmentedBuffer<BAllocator>::raw(pos_type pos, uint32_t &outSize) const {
 	Position s = Position::convertFromLinearPosition(pos,this);
 	//position is valid AND the returned offset is less or equal to than the number of bytes written
 	//Convert FromLinear OFfset uses capacity NOT bytes written so it could return an offset that is larger
@@ -268,7 +267,7 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::rea
 		size_type currentIndex = ReadPos.Index;
 		size_type currentOffSet = ReadPos.OffSet;
 		while(leftToCopy>0 && currentIndex<BufferList.size()) {
-			size_type copied = BufferList[currentIndex++]->CopyTo(currentOffSet,static_cast<uint8*>(outBuff)+copiedTotal,leftToCopy);
+			size_type copied = BufferList[currentIndex++]->CopyTo(currentOffSet,static_cast<uint8_t*>(outBuff)+copiedTotal,leftToCopy);
 			copiedTotal += copied;
 			leftToCopy -= copied;
 			currentOffSet = 0;
@@ -287,8 +286,8 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::get
 template<typename BAllocator>
 void SegmentedBuffer<BAllocator>::EncodeBufferList() {
 	BufferListType::iterator it = BufferList.begin();
-	uint32 lastSize=0xFFFFFFFF;
-	uint32 count=0;
+	uint32_t lastSize=0xFFFFFFFF;
+	uint32_t count=0;
 	EncodedCollection.resize(0);
 	for(;it!=BufferList.end();++it) {
 		if((*it)->bytesWritten()==lastSize) {
@@ -306,7 +305,7 @@ void SegmentedBuffer<BAllocator>::EncodeBufferList() {
 
 template<typename BAllocator>
 void SegmentedBuffer<BAllocator>::UpdateEncodeEnd() {
-	uint32 lastIndex=EncodedCollection.empty() ? 0 : EncodedCollection.back().endIndex;
+	uint32_t lastIndex=EncodedCollection.empty() ? 0 : EncodedCollection.back().endIndex;
 	if(EncodedCollection.empty()) {
 		Encoded e;
 		e.endIndex = e.startIndex = lastIndex;
@@ -327,9 +326,9 @@ void SegmentedBuffer<BAllocator>::UpdateEncodeEnd() {
 	} else if(EncodedCollection.back().BytesWritten!=BufferList[lastIndex]->bytesWritten()) {
 		EncodedCollection.back().BytesWritten = BufferList[lastIndex]->bytesWritten();
 	}
-	uint32 lastSize=EncodedCollection.back().BytesWritten;
-	uint32 bsize = (uint32)BufferList.size();
-	for(uint32 i=EncodedCollection.back().endIndex+1;i<bsize;i++) {
+	uint32_t lastSize=EncodedCollection.back().BytesWritten;
+	uint32_t bsize = (uint32_t)BufferList.size();
+	for(uint32_t i=EncodedCollection.back().endIndex+1;i<bsize;i++) {
 		if(BufferList[i]->bytesWritten()==lastSize) {
 			EncodedCollection.back().endIndex = lastIndex++;
 		} else {
@@ -354,7 +353,7 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::Enc
 //
 template<typename BAllocator>
 typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::EncodeSize(bool forCapacity) const {
-	uint32 size = 0;
+	uint32_t size = 0;
 	EncodeListTypeCIT it = EncodedCollection.begin();
 	for(;it!=EncodedCollection.end();++it) {
 		size+=(*it).BytesWritten*(((*it).endIndex-(*it).startIndex)+1);
@@ -366,14 +365,14 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::Enc
 }
 
 template<typename BAllocator>
-typename SegmentedBuffer<BAllocator>::Position SegmentedBuffer<BAllocator>::findBlockIndex(uint32 pos) const {
+typename SegmentedBuffer<BAllocator>::Position SegmentedBuffer<BAllocator>::findBlockIndex(uint32_t pos) const {
 	EncodeListTypeCIT it = EncodedCollection.begin();
-	uint32 lastLoopLinearPos = 0;
-	uint32 index = 0;
+	uint32_t lastLoopLinearPos = 0;
+	uint32_t index = 0;
 	for(;it!=EncodedCollection.end();++it) {
-		uint32 endLinear = (*it).BytesWritten*(((*it).endIndex-(*it).startIndex)+1) + lastLoopLinearPos;
+		uint32_t endLinear = (*it).BytesWritten*(((*it).endIndex-(*it).startIndex)+1) + lastLoopLinearPos;
 		if(pos>=lastLoopLinearPos && pos<=endLinear) {
-			uint32 BucketSize = pos-lastLoopLinearPos;
+			uint32_t BucketSize = pos-lastLoopLinearPos;
 			index+= BucketSize/(*it).BytesWritten;
 			return Position(index,BucketSize%(*it).BytesWritten,this);
 		}
@@ -402,16 +401,16 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::wri
 			BufferList.push_back(bb);
 		}
 		if(inBuffer) {
-			copied = BufferList[currentIndex++]->CopyFrom(currentOffSet,static_cast<const uint8*>(inBuffer)+copiedTotal,leftToCopy);
+			copied = BufferList[currentIndex++]->CopyFrom(currentOffSet,static_cast<const uint8_t*>(inBuffer)+copiedTotal,leftToCopy);
 		} else { //passing null simply moves points to act like a "fill"
-			copied = BufferList[currentIndex++]->CopyFrom(currentOffSet,static_cast<const uint8*>(inBuffer),leftToCopy);
+			copied = BufferList[currentIndex++]->CopyFrom(currentOffSet,static_cast<const uint8_t*>(inBuffer),leftToCopy);
 		}
 		copiedTotal += copied;
 		leftToCopy -= copied;
 		currentOffSet = 0;
 	}
 #ifdef VALIDATE_SEGMENTED_BUFFER
-	for(uint32 i=0;i<BufferList.size();i++)
+	for(uint32_t i=0;i<BufferList.size();i++)
 		if(i!=(BufferList.size()-1)) {
 			assert(BufferList[i]->bytesWritten()==BufferList[i]->capacity());
 		}
@@ -452,14 +451,14 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::era
 	}
 #ifdef VALIDATE_SEGMENTED_BUFFER
 	//only valid in test cases
-	uint32 validationLength = ePos.convertToLinearOffset()-sPos.convertToLinearOffset();
+	uint32_t validationLength = ePos.convertToLinearOffset()-sPos.convertToLinearOffset();
 #endif
 	//total blocks to reserve
-	uint32 numBlocks = uint32(BufferList.size()) - (ePos.Index-sPos.Index);
+	uint32_t numBlocks = uint32_t(BufferList.size()) - (ePos.Index-sPos.Index);
 	//reserve blocks
 	BufferListType newContainer(numBlocks,0), removedBlocks;
-	uint32 index = 0;
-	uint32 wIndex = 0;
+	uint32_t index = 0;
+	uint32_t wIndex = 0;
 	size_type erased = 0;
 	for(;index<BufferList.size();index++) {
 		if(wIndex>=newContainer.size()) {
@@ -494,7 +493,7 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::era
 				erased+=BufferList[index]->bytesWritten();
 			} else {	//partial info needed
 				newContainer[wIndex] = BufferList[index];
-				uint32 oldBytesWritten = BufferList[index]->bytesWritten();
+				uint32_t oldBytesWritten = BufferList[index]->bytesWritten();
 				newContainer[wIndex]->erase(sPos.OffSet);
 				//its not the last block so sync capacity with bytes written
 				//we knows its not the last block because index<ePos.Index
@@ -534,7 +533,7 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::era
 	std::for_each(removedBlocks.begin(),removedBlocks.end(),&BAllocator::deallocate);
 
 #ifdef VALIDATE_SEGMENTED_BUFFER
-	for(uint32 i=0;i<BufferList.size();i++)
+	for(uint32_t i=0;i<BufferList.size();i++)
 	if(i!=(BufferList.size()-1)) {
 		assert(BufferList[i]->bytesWritten()==BufferList[i]->capacity());
 	}
