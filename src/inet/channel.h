@@ -9,7 +9,7 @@
 
 namespace wss {
 	class TCPServerSocket;
-	class SequenceIDValidator;
+//	class SequenceIDValidator;
 
 /*
 *	@Author Demetrius Comes
