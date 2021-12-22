@@ -13,6 +13,9 @@ ErrorType WSInit::init(std::shared_ptr<spdlog::logger> &logger) {
 }
 
 WSInit &WSInit::get() {
+#ifdef _DEBUG
+  assert(MySelf,"you must initialize wslib by calling WSInit::init() before making any library calls");
+#endif
 	return *MySelf;
 }
 
