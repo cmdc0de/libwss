@@ -35,5 +35,7 @@ set(LIBWSSSRC
 	${LIBWSSDIR}/src/inet/inetaddress_v4.cpp
 	${LIBWSSDIR}/src/inet/tcp.cpp
 	${LIBWSSDIR}/src/inet/channel.cpp
+	${LIBWSSDIR}/src/io/readerwriter.cpp
+	${LIBWSSDIR}/src/io/iotraits_linux.cpp
 )
 

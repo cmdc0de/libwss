@@ -300,9 +300,9 @@ size_t ReaderWriter::readVarUInt32(uint32_t& val) {
 * ReaderWriter::ReadVarUInt32 -- Read an Signed VarInt into a 32 bit value
 *
 *********************************************************************************************/
-size_t ReaderWriter::readVarSInt32(int32& val) {
+size_t ReaderWriter::readVarSInt32(int32_t& val) {
 	uint32_t number;
-	size_t ret = ReadVarUInt32(number);
+	size_t ret = readVarUInt32(number);
 	if (ret  != STREAM_ERROR) {
 		val = zigZagDecode32(number);
 	}
@@ -342,9 +342,9 @@ size_t ReaderWriter::readVarUInt64(uint64_t& val) {
 * ReaderWriter::ReadVarSInt64 -- Read a Signed VarInt into a 64 bit value
 *
 *********************************************************************************************/
-size_t ReaderWriter::readVarSInt64(int64& val) {
+size_t ReaderWriter::readVarSInt64(int64_t& val) {
 	uint64_t number;
-	size_t ret = ReadVarUInt64(number);
+	size_t ret = readVarUInt64(number);
 	if (ret  != STREAM_ERROR) {
 		val = zigZagDecode64(number);
 	}

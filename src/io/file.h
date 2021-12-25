@@ -275,7 +275,7 @@ bool File<OSIOTraits,char_type,Traits>::make(bool bMakeDirs) const {
 		if(bMakeDirs && !m_Directory.exists()) {
 			m_Directory.make(true);
 		}
-		std::basic_ofstream<char_type> newFile((const char*)getAbsolutePath().c_str(),std::ios::out);
+		std::basic_ofstream<char_type> newFile(reinterpret_cast<const char*>(getAbsolutePath().c_str()),std::ios::out);
 		if(!newFile.good()) {
 			return false;
 		}

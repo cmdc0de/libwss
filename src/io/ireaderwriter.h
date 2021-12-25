@@ -2,6 +2,7 @@
 #define WSS_IREADERWRITER_H
 
 #include "io_typedefs.h"
+#include <memory>
 
 namespace wss {
 	class IReaderWriter {

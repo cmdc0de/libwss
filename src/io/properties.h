@@ -2,7 +2,6 @@
 #ifndef IT_PROPERTIES_H_
 #define IT_PROPERTIES_H_
 
-#include "../core_macros.h"
 #include "../portable_types.h"
 #include "io_typedefs.h"
 #include <time.h>
@@ -14,7 +13,7 @@ namespace wss {
 
 class Properties {
 private:
-	typedef std::map<uint64,std::pair<std::string,std::string> > ValueMap;
+	typedef std::map<uint64_t,std::pair<std::string,std::string> > ValueMap;
 public:
 	static const int MAX_PROPERTIES_LINE = 1024;
 public:
@@ -25,7 +24,7 @@ public:
 	*  
 	*  returns hash value of a string used by the Properties construct.
 	*/
-	static uint64 calcStorageKey(const std::string &str);
+	static uint64_t calcStorageKey(const std::string &str);
 public:
 	/**
 	* @date  9/18/2005 9:06:03 PM

@@ -2,6 +2,8 @@
 #include "iotraits_linux.h"
 using namespace wss;
 
+#define TEMPLATE_SPECIALIZATION template<>
+
 TEMPLATE_SPECIALIZATION
 const char *LinuxIOTraits<char>::PATH_SEP = (const char *)"/";
 

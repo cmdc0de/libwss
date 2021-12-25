@@ -13,7 +13,7 @@ namespace wss {
 		};
 
 		typedef int32_t pos_type;
-		static const size_t STREAM_ERROR = (size_t)-1;
+		static const size_t STREAM_ERROR = static_cast<size_t>(-1);
 	public:
 		static IReaderWriter * Create_Default_Interface();
 
@@ -88,11 +88,11 @@ namespace wss {
 
 	private:
 
-		static uint32_t zigZagEncode32(int32_t n) { return (n << 1) ^ (n >> 31); }
-		static uint64_t zigZagEncode64(int64_t n) { return (n << 1) ^ (n >> 63); }
+		static uint32_t zigZagEncode32(int32_t n) { return static_cast<uint32_t>((n << 1) ^ (n >> 31)); }
+		static uint64_t zigZagEncode64(int64_t n) { return static_cast<uint64_t>((n << 1) ^ (n >> 63)); }
 
-		static int32_t zigZagDecode32(uint32_t n) { return (n >> 1) ^ -static_cast<int32_t>(n & 1); }
-		static int64_t zigZagDecode64(uint64_t n) { return (n >> 1) ^ -static_cast<int64_t>(n & 1); }
+		static int32_t zigZagDecode32(uint32_t n) { return static_cast<int32_t>((n >> 1) ^ -(n & 1)); }
+		static int64_t zigZagDecode64(uint64_t n) { return static_cast<int64_t>((n >> 1) ^ -(n & 1)); }
 
 		static size_t WriteVarInt32Helper(uint32_t value, uint8_t* target);
 		static size_t WriteVarInt64Helper(uint64_t value, uint8_t* target);

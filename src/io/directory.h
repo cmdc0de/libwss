@@ -36,7 +36,7 @@ namespace wss {
 		*  
 		*  
 		*/
-		Directory(const DirString &strPath = DirString((const char_type *)""),bool bCreate = false)
+		Directory(const DirString &strPath = DirString(reinterpret_cast<const char_type *>("")),bool bCreate = false)
 			: mstrPath(strPath) {
 			setUpInitalPath(bCreate);
 		}

@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
+#include "../error_type.h"
 
 namespace wss {
 	/**
@@ -55,7 +56,7 @@ struct LinuxIOTraits
 	static bool getCurrentDirectory(string_type &s) {
 		char_type buf[PATH_MAX];
 		::memset(buf,0,sizeof(char_type)*PATH_MAX);
-		if(::getcwd((char_type *)buf,PATH_MAX)!=0) {
+		if(::getcwd(reinterpret_cast<char_type *>(buf),PATH_MAX)!=0) {
 			s=buf;
 			return true;
 		}
@@ -212,13 +213,13 @@ struct LinuxIOTraits
 	static string_type getTempFile() {
 		const char *FixedTemplate = "/tmp/ITXXXXXX";
 		char FileName[256];
-		snprintf((char *)&FileName[0],sizeof(FileName),"%s",FixedTemplate);
-		int fd = ::mkstemp((char *)&FileName[0]);
+		snprintf(reinterpret_cast<char *>(&FileName[0]),sizeof(FileName),"%s",FixedTemplate);
+		int fd = ::mkstemp(reinterpret_cast<char *>(&FileName[0]));
 		if(fd==-1) {
 			::close(fd);
-			return string_type((const char *)"");
+			return string_type(reinterpret_cast<const char *>(""));
 		}
-		return string_type((const char *)&FileName[0]);
+		return string_type(reinterpret_cast<const char *>(&FileName[0]));
 	}
 
 	/**
@@ -252,7 +253,7 @@ struct LinuxIOTraits
 			while ((pDirent = readdir( pDir))) {
 				struct stat st;
 				strncpy(&fileName[pos],pDirent->d_name,PATH_MAX-pos);
-				if(stat((const char *)fileName, &st)==0) {
+				if(stat(reinterpret_cast<const char *>(fileName), &st)==0) {
 					if (!(st.st_mode & S_IFDIR)) {
 						if(bAllFiles || strstr(pDirent->d_name,cmpString.c_str())) {
 							files.insert(files.end(),string_type(pDirent->d_name));
@@ -306,7 +307,7 @@ struct LinuxIOTraits
 			while ((pDirent = readdir( pDir)))  {
 					struct stat st;
 					strncpy(&fileName[pos],pDirent->d_name,PATH_MAX-pos);
-					if(stat((const char *)fileName, &st)==0) {
+					if(stat(reinterpret_cast<const char *>(fileName), &st)==0) {
 							if (st.st_mode & S_IFDIR) {
 									dirs.insert(dirs.end(),string_type(pDirent->d_name));
 							}
