@@ -84,7 +84,7 @@ public: //static
 	/*
 	*	Returns the incoming buffer
 	*/
-	const ReaderWriter &getIncomingBuffer() {return mIncomingBuffer;}
+	const ReaderWriter &getIncomingBuffer() const {return mIncomingBuffer;}
 	/*
 	*	Given a container write it to the outgoing buffer
 	*/
@@ -99,6 +99,7 @@ protected:
 	void removeFromOutBuffer(uint32_t bytesToRemove);
 	const ReaderWriter &getOutBuffer() {return mOutBuffer;}
 	void clearMessageBuffer();
+  ReaderWriter &getIncomingBuffer() {return mIncomingBuffer;}
 protected:
 	ReaderWriter		mIncomingBuffer;
 	NativeTimeType		mLastReceiveTime;

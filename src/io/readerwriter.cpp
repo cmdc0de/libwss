@@ -41,13 +41,10 @@ ReaderWriter::~ReaderWriter() {
 *
 *********************************************************************************************/
 size_t ReaderWriter::read( void * dst, size_t length ) {
-
 	//Adjust length here.  Never pass length to Impl that would read more than is available
-	if(length > 0)
-	{
+	if(length > 0) {
 		size_t real_len = length;
-		if(real_len + ReadCursor > Impl->size())
-		{
+		if(real_len + ReadCursor > Impl->size()) {
 			real_len = Impl->size() - ReadCursor;
 		}
 
@@ -58,7 +55,20 @@ size_t ReaderWriter::read( void * dst, size_t length ) {
 	return STREAM_ERROR; //error
 }
 
+size_t ReaderWriter::readUntilDelim(void * dst, size_t length, char delim, bool &wasDelimHit) {
+	//Adjust length here.  Never pass length to Impl that would read more than is available
+	if(length > 0) {
+		size_t real_len = length;
+		if(real_len + ReadCursor > Impl->size()) {
+			real_len = Impl->size() - ReadCursor;
+		}
 
+		size_t read_len = Impl->readUntilDelim(ReadCursor, dst, real_len, delim, wasDelimHit);
+		ReadCursor += read_len;
+		return read_len;
+	}
+	return STREAM_ERROR; //error
+}
 /**********************************************************************************************
 * ReaderWriter::Write -- Write data to the stream
 *

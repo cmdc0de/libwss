@@ -17,6 +17,7 @@ public:
 	void swap(BlockBuffer &bb);
 	//copy from this memory to an out going buffer
 	uint32_t CopyTo(uint32_t pos, uint8_t* toBuffer, uint32_t sizeToCopy) const;
+  uint32_t CopyToWithDelim(uint32_t pos, uint8_t* toBuffer, uint32_t sizeToCopy, char delim, bool &delimHit) const;
 	//copy from external buffer to this memory
 	uint32_t CopyFrom(uint32_t pos, const uint8_t* fromBuffer, uint32_t sizeToCopy);
 	//check to see if block is empty
@@ -117,6 +118,7 @@ public:
 	const void *raw(pos_type pos, uint32_t &outSize) const ;
 
 	size_type read(pos_type readPos, void *outBuff, size_type outBufferSize);
+	size_type read(pos_type readPos, void *outBuff, size_type outBufferSize, char delim, bool &wasDelimHit);
 
 	size_type getBlockCount();
 	size_type write(pos_type writePos, const void *inBuffer, size_type inBufferSize);

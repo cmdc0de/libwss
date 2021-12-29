@@ -30,6 +30,9 @@ size_t SegmentedReaderWriterImpl::read(size_t pos, void * dst, size_t length) {
 }
 
 
+size_t SegmentedReaderWriterImpl::readUntilDelim(size_t pos, void * dst, size_t length, char delim, bool &wasDelimHit) {
+	return Stream.read(pos,dst,length,delim,wasDelimHit);
+}
 /**********************************************************************************************
 * SegmentedReaderWriterImpl::Write -- writes length bytes from src starting at pos in segmented buffer
 * 

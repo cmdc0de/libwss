@@ -23,6 +23,7 @@ namespace wss {
 		~ReaderWriter();
 
 		size_t read(void * dst, size_t length);
+		size_t readUntilDelim(void * dst, size_t length, char delim, bool &wasDelimHit);
 		size_t write(const void * src, size_t length);
 		size_t erase(size_t idx, size_t length);
 

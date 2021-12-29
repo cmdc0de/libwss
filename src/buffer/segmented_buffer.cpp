@@ -48,6 +48,24 @@ uint32_t BlockBuffer::CopyTo(uint32_t pos, uint8_t* toBuffer, uint32_t sizeToCop
 	return toCopy;
 }
 
+uint32_t BlockBuffer::CopyToWithDelim(uint32_t pos, uint8_t* toBuffer
+    , uint32_t sizeToCopy, char delim, bool &delimHit) const  {
+  delimHit = false;
+	uint32_t MaxToCopy = (bytesWritten()-pos) >= 0 ? (bytesWritten()-pos) : 0;
+	MaxToCopy = (std::min)(MaxToCopy,sizeToCopy);
+  uint32_t copied = 0;
+  for(;copied<MaxToCopy;++copied) {
+    if(static_cast<char>(start[pos])==delim) {
+      toBuffer[copied] = 0;
+      delimHit = true;
+      return copied;
+    } else {
+      toBuffer[copied] = start[pos++];
+    }
+  }
+	return copied;
+}
+
 uint32_t BlockBuffer::CopyFrom(uint32_t pos, const uint8_t* fromBuffer, uint32_t sizeToCopy) {
 	uint32_t toCopy = (capacity()-pos) >= 0 ? (capacity()-pos) : 0;
 	toCopy = (std::min)(toCopy,sizeToCopy);
@@ -271,6 +289,31 @@ typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::rea
 			copiedTotal += copied;
 			leftToCopy -= copied;
 			currentOffSet = 0;
+		}
+		return outBufferSize;
+	} else {
+		return 0;
+	}
+}
+
+template<typename BAllocator>
+typename SegmentedBuffer<BAllocator>::size_type SegmentedBuffer<BAllocator>::read(pos_type readPos, void *outBuff
+    , size_type outBufferSize, char delim, bool &bDelimHist) {
+	Position ReadPos = Position::convertFromLinearPosition(readPos,this);
+	if(ReadPos.Is_Valid()) {
+		size_type copiedTotal = 0;
+		size_type leftToCopy = outBufferSize;
+		size_type currentIndex = ReadPos.Index;
+		size_type currentOffSet = ReadPos.OffSet;
+    bool bDelimHit = false;
+		while(leftToCopy>0 && currentIndex<BufferList.size()) {
+			size_type copied = BufferList[currentIndex++]->CopyToWithDelim(currentOffSet,static_cast<uint8_t*>(outBuff)+copiedTotal,leftToCopy,delim, bDelimHit);
+			copiedTotal += copied;
+			leftToCopy -= copied;
+			currentOffSet = 0;
+      if(bDelimHit) {
+        break;
+      }
 		}
 		return outBufferSize;
 	} else {

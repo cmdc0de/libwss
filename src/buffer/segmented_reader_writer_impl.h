@@ -17,6 +17,7 @@ protected:
 public:
 	virtual ~SegmentedReaderWriterImpl();
 	virtual size_t read(size_t pos, void * dst, size_t length);
+  virtual size_t readUntilDelim(size_t pos, void * dst, size_t length, char delim, bool &wasDelimHit);
 	virtual size_t write(size_t pos, const void * src, size_t length);
 	virtual size_t erase(size_t pos, size_t length);
 
